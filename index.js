@@ -34,6 +34,7 @@ const ProductSchema = new mongoose.Schema({
   images: [{ type: String }],
   thumbnail: { type: String },
   category: { type: String },
+  isDeliveryFree: { type: Boolean },
 });
 const Product = mongoose.model("Product", ProductSchema);
 
