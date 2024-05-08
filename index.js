@@ -73,7 +73,7 @@ const User = mongoose.model("User", UserSchema);
 app.post("/register", async (req, res) => {
   const { name, email, password, phone, address } = req.body;
 
-  const dbUser = await User.findOne(email);
+  const dbUser = await User.findOne({ email });
   if (dbUser) {
     res.send("user already exist");
   } else {
@@ -90,7 +90,7 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const dbUser = await User.findOne(email);
+  const dbUser = await User.findOne({ email });
   if (dbUser) {
     if (dbUser.password === password) {
       res.status(201).json(dbUser);
@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/user", async (req, res) => {
   const { email } = req.body;
-  const user = await User.findOne(email);
+  const user = await User.findOne({ email });
   res.status(201).json(user);
 });
 
