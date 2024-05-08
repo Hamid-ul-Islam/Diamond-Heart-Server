@@ -51,7 +51,61 @@ const OrderSchema = new mongoose.Schema({
 
 const Order = mongoose.model("Order", OrderSchema);
 
+const UserSchema = new mongoose.Schema({
+  name: String,
+  phone: String,
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  address: String,
+  password: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+});
+
+const User = mongoose.model("User", UserSchema);
+
 // Routes
+app.post("/register", async (req, res) => {
+  const { name, email, password, phone, address } = req.body;
+
+  const dbUser = await User.findOne(email);
+  if (dbUser) {
+    res.send("user already exist");
+  } else {
+    const saved = await User.create({
+      name,
+      email,
+      password,
+      phone,
+      address,
+    });
+    res.status(201).json(saved);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const dbUser = await User.findOne(email);
+  if (dbUser) {
+    if (dbUser.password === password) {
+      res.status(201).json(dbUser);
+    } else {
+      res.status(500).send("Wrong credentials");
+    }
+  }
+});
+
+app.get("/user", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne(email);
+  res.status(201).json(user);
+});
+
 app.get("/products", async (req, res) => {
   try {
     let limit = parseInt(req.query.limit) || 100;
